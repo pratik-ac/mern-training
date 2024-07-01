@@ -1,4 +1,4 @@
-use("kec-crud");
+// use("kec-crud");
 
 // * array operator
 // ? $all
@@ -17,3 +17,59 @@ use("kec-crud");
 
 // ? find movies whose genres size is 3
 // db.movies.find({ genres: { $size: 3 } });
+
+// * $elemMatch
+// db.scores.insertMany([
+//   {
+//     name: "Subham",
+//     scores: [82, 85, 88],
+//     points: [
+//       {
+//         sub: "Social",
+//         point: 82,
+//       },
+//       {
+//         sub: "Science",
+//         point: 65,
+//       },
+//     ],
+//   },
+//   {
+//     name: "Suyasha",
+//     scores: [75, 88, 89],
+//     points: [
+//       {
+//         sub: "Social",
+//         point: 75,
+//       },
+//       {
+//         sub: "Science",
+//         point: 84,
+//       },
+//     ],
+//   },
+
+//   {
+//     name: "Smarika",
+//     scores: [42, 65, 88],
+//     points: [
+//       {
+//         sub: "Social",
+//         point: 67,
+//       },
+//       {
+//         sub: "Science",
+//         point: 89,
+//       },
+//     ],
+//   },
+// ]);
+
+// db.scores.find({ "points.sub": "Social", "points.point": { $gt: 80 } }); // ! this
+
+// db.scores.find({
+//   points: { $elemMatch: { sub: "Social", point: { $gt: 80 } } },
+// });
+
+// ? find students whose scores is greater than 80 and less than 85
+// db.scores.find({ scores: { $elemMatch: { $gt: 80, $lt: 85 } } });
