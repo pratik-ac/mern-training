@@ -4,7 +4,7 @@
 // ? regex, $expr
 
 // * regex
-// db.movies.find({ name: { $regex: "top model", $options: "i" } }); // ! $options: "i" => case-insensitive
+// db.movies.find({ name: { $regex: "top model", $options: "i" } }); // ! $options: "i" => case-insensitive search
 
 // db.movies.find({ summary: { $regex: "dark comical", $options: "i" } });
 

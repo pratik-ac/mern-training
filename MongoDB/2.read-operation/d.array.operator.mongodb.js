@@ -65,11 +65,11 @@
 //   },
 // ]);
 
-// db.scores.find({ "points.sub": "Social", "points.point": { $gt: 80 } }); // ! this
+// db.scores.find({ "points.sub": "Social", "points.point": { $gt: 80 } }); // ! this will return all the documents where points.sub is "Social" and points.point is greater than 80 but it is not the correct way to query
 
 // db.scores.find({
 //   points: { $elemMatch: { sub: "Social", point: { $gt: 80 } } },
-// });
+// }); // ! this will return all the documents where points.sub is "Social" and points.point is greater than 80
 
 // ? find students whose scores is greater than 80 and less than 85
 // db.scores.find({ scores: { $elemMatch: { $gt: 80, $lt: 85 } } });
