@@ -2,7 +2,6 @@ use("kec-crud");
 
 // ? comparison operator
 // ? $eq , $ne, $gt, $gte, $lt, $lte, $in, $nin
-// TODO: $in, $nin
 
 // * $eq
 // ? find movie whose name is "Glee"
