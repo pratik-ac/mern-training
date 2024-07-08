@@ -2,6 +2,7 @@ use("kec-crud");
 
 // ? aggregation => powerful query tool
 // ? uses pipeline stage
+// TODO: $group
 
 // * $match => alternative to find()
 // db.movies.aggregate([
@@ -167,3 +168,55 @@ use("kec-crud");
 // ]);
 
 // * $skip => skips the specified number of documents
+// db.movies.aggregate([
+//   {
+//     $match: {},
+//   },
+//   {
+//     $sort: {
+//       id: 1,
+//     },
+//   },
+//   {
+//     $skip: 5,
+//   },
+//   {
+//     $limit: 2,
+//   },
+//   {
+//     $project: {
+//       _id: 0,
+//       id: 1,
+//       name: 1,
+//     },
+//   },
+// ]);
+
+// ! equivalent code
+
+// let page = 2; // ! used for pagination
+// let limit = 10;
+// let skip = (page - 1) * limit;
+// db.movies.aggregate([
+//   {
+//     $match: {},
+//   },
+//   {
+//     $sort: {
+//       id: 1,
+//     },
+//   },
+//   {
+//     $skip: skip,
+//   },
+//   {
+//     $limit: limit,
+//   },
+//   {
+//     $project: {
+//       _id: 0,
+//       id: 1,
+//       name: 1,
+//     },
+//   },
+// ]);
