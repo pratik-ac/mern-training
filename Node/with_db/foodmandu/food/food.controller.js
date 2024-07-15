@@ -38,7 +38,7 @@ router.delete(
 router.put(
   "/update/:id",
   validateMongoIdFromParams,
-  checkRequiredFoodItems,
+  validateFoodData,
   updateFood
 );
 export default router;
