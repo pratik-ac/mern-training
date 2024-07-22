@@ -6,7 +6,7 @@ import {
   loginUserDataValidationSchema,
   userValidationSchema,
 } from "./user.validation.js";
-import validateReqBody from "../middleware/authentication.middleware.js";
+import validateReqBody from "../middleware/validate.req.body.js";
 import jwt from "jsonwebtoken";
 
 const router = express.Router();
