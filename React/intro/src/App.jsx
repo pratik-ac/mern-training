@@ -1,31 +1,36 @@
-import Person from "./Person";
-import Player from "./Player";
+import React from "react";
+import Score from "./Score";
+
+const playerData = [
+  {
+    id: 1,
+    name: "Kushal Bhurtel",
+    runs: 30,
+  },
+  {
+    id: 2,
+    name: "Sikhar Dhawan",
+    runs: 71,
+  },
+  {
+    id: 3,
+    name: "Rohit Poudel",
+    runs: 50,
+  },
+  {
+    id: 4,
+    name: "Rohit Sharma",
+    runs: 100,
+  },
+];
 
 const App = () => {
   return (
-    <section
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "2rem",
-        justifyContent: "center",
-        alignItem: "center",
-        marginTop: "2rem",
-      }}
-    >
-      <Player
-        image="https://pbs.twimg.com/profile_images/1660478058699329537/KsVez3gh_400x400.jpg"
-        name="Kushal Bhurtel"
-      />
-      <Player
-        image="https://wicketnepal.com/wp-content/uploads/2024/02/dipendra-airee-pro.jpg"
-        name="Dipendra Singh Airee"
-      />
-      <Player
-        image="https://www.cricnepal.com/wp-content/uploads/2023/04/Sandeep-Lamichhane-after-compleing-a-fifer-against-Qatar-in-ACC-Premier-Cup-2023.jpg"
-        name="Sandeep Lamichhane"
-      />
-    </section>
+    <div>
+      {playerData.map((item, index, array) => {
+        return <Score key={item.id} name={item.name} runs={item.runs} />;
+      })}
+    </div>
   );
 };
 
