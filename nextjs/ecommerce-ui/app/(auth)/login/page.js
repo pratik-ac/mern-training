@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Box,
@@ -6,13 +6,17 @@ import {
   FormControl,
   FormHelperText,
   TextField,
-} from "@mui/material";
-import React from "react";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
-import { loginUserValidationSchema } from "@/validation-schema/login.user.validation.schema";
+} from '@mui/material';
+import React from 'react';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { loginUserValidationSchema } from '@/validation-schema/login.user.validation.schema';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Login = () => {
+  const router = useRouter();
   return (
     // <div className="text-7xl text-red-800 underline uppercase bg-gray-400 hidden md:block">
     //   Login
@@ -20,12 +24,28 @@ const Login = () => {
     <Box>
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: '',
+          password: '',
         }}
         validationSchema={loginUserValidationSchema}
-        onSubmit={(values) => {
-          console.log(values);
+        onSubmit={async (values) => {
+          try {
+            const response = await axios.post(
+              'http://localhost:8080/user/login',
+              values
+            );
+
+            localStorage.setItem('token', response?.data?.token);
+            localStorage.setItem(
+              'firstName',
+              response?.data?.userDetails?.firstName
+            );
+            localStorage.setItem('userRole', response?.data?.userDetails?.role);
+
+            router.push('/');
+          } catch (err) {
+            console.log(err);
+          }
         }}
       >
         {(formik) => {
@@ -37,7 +57,7 @@ const Login = () => {
               <p className="text-3xl">Sign in</p>
               {/* email */}
               <FormControl fullWidth>
-                <TextField label="Email" {...formik.getFieldProps("email")} />
+                <TextField label="Email" {...formik.getFieldProps('email')} />
                 {formik.touched.email && formik.errors.email ? (
                   <FormHelperText error>{formik.errors.email}</FormHelperText>
                 ) : null}
@@ -47,7 +67,7 @@ const Login = () => {
               <FormControl fullWidth>
                 <TextField
                   label="Password"
-                  {...formik.getFieldProps("password")}
+                  {...formik.getFieldProps('password')}
                 />
                 {formik.touched.password && formik.errors.password ? (
                   <FormHelperText error>
@@ -63,6 +83,14 @@ const Login = () => {
               >
                 Login
               </Button>
+              <div>
+                <Link
+                  href="/register"
+                  className="text-md underline text-blue-600"
+                >
+                  New here? Register
+                </Link>
+              </div>
             </Form>
           );
         }}
