@@ -35,11 +35,7 @@ const Login = () => {
     event.preventDefault();
   };
 
-  const {
-    isPending,
-    error,
-    mutate: handleLogin,
-  } = useMutation({
+  const { isPending, error, mutate } = useMutation({
     mutationKey: ['login-user'],
     mutationFn: async (values) => {
       return await $axios.post('/user/login', values);
@@ -64,6 +60,7 @@ const Login = () => {
       console.log(error.response.data.message);
     },
   });
+
   return (
     <Box>
       {isPending && <LinearProgress color="secondary" />}
@@ -74,7 +71,7 @@ const Login = () => {
         }}
         validationSchema={loginUserValidationSchema}
         onSubmit={(values) => {
-          handleLogin(values);
+          mutate(values);
         }}
       >
         {(formik) => {
