@@ -17,16 +17,17 @@ const Home = () => {
 
   return (
     <div>
-      <p className="text-5xl bold italic">Welcome {firstName}</p>
+      <p className="text-5xl bold underline">Welcome {firstName}</p>
+
       <Button
-        variant="outlined"
+        variant="contained"
         color="secondary"
         size="large"
         onClick={() => {
           router.push('/add-product');
         }}
       >
-        Add Product
+        add product
       </Button>
 
       {userRole === 'buyer' ? <BuyerList /> : <SellerList />}
