@@ -217,7 +217,7 @@ router.post(
       { $limit: limit },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           name: 1,
           brand: 1,
           price: 1,

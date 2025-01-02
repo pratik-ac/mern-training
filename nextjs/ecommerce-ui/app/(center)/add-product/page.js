@@ -19,7 +19,6 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 const AddProduct = () => {
   const router = useRouter();

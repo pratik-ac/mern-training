@@ -29,4 +29,8 @@ body {
   .card-center {
     @apply flex flex-row flex-wrap gap-8 justify-center items-center my-12;
   }
+
+  .pagination-center {
+    @apply flex justify-center items-center my-12;
+  }
 }
