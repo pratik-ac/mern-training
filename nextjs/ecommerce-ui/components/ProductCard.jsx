@@ -1,22 +1,14 @@
 'use client';
-import { Box, Button, Chip, Stack, Typography } from '@mui/material';
-import Image from 'next/image';
-import React from 'react';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { Button, Chip, Stack, Typography } from '@mui/material';
+import Image from 'next/image';
+import DeleteProductDialog from './DeleteProductDialog';
 
 const ProductCard = (props) => {
-  {
-    /* TODO: manage overflow */
-  }
+  const productId = props._id;
   return (
-    <Box
-      sx={{
-        width: '400px',
-        boxShadow:
-          ' rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
-      }}
-    >
+    <div className="w-[400px] shadow-2xl">
+      {/* TODO: manage overflow */}
       <Image
         src={
           props.image || '/book-composition-with-open-book_23-2147690555.avif'
@@ -25,14 +17,7 @@ const ProductCard = (props) => {
         width={400}
         alt="Book image"
       />
-      <Box
-        sx={{
-          padding: '1rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}
-      >
+      <div className="flex flex-col gap-8 p-4">
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="h5">{props.name}</Typography>
           <Chip label={props.brand} color="success" variant="outlined" />
@@ -40,16 +25,11 @@ const ProductCard = (props) => {
         </Stack>
 
         <Typography sx={{ textAlign: 'justify', overflow: 'hidden' }}>
-          {props.description} ...
+          {props.description}...
         </Typography>
         <Stack direction="row" justifyContent="space-between">
-          <Button
-            color="error"
-            variant="contained"
-            startIcon={<DeleteOutlineOutlinedIcon />}
-          >
-            Delete
-          </Button>
+          <DeleteProductDialog productId={productId} />
+
           <Button
             color="success"
             variant="contained"
@@ -58,8 +38,8 @@ const ProductCard = (props) => {
             View More
           </Button>
         </Stack>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

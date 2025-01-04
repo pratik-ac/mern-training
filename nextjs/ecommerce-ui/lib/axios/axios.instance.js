@@ -2,9 +2,10 @@ import axios from 'axios';
 
 const $axios = axios.create({
   baseURL: 'http://localhost:8080',
+  timeout: 5000,
 });
 
-// add a request interceptor
+// Add a request interceptor
 $axios.interceptors.request.use(function (config) {
   // get token from local storage
   const token = window.localStorage.getItem('token');
@@ -13,6 +14,7 @@ $axios.interceptors.request.use(function (config) {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
