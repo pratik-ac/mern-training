@@ -56,7 +56,8 @@ const Header = (props) => {
     </Box>
   );
 
-  const container = typeof window !== 'undefined' ? document.body : undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: 'flex', mb: '5rem' }}>
