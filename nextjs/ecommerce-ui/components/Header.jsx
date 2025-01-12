@@ -28,10 +28,9 @@ const Header = (props) => {
     setMobileOpen((prevState) => !prevState);
   };
 
-  //   handle logout
+  // handle logout
   const handleLogout = () => {
     localStorage.clear();
-
     redirect('/login');
   };
 
@@ -50,7 +49,7 @@ const Header = (props) => {
           </ListItem>
         ))}
         <Button variant="contained" onClick={handleLogout}>
-          logout
+          Logout
         </Button>
       </List>
     </Box>
@@ -60,10 +59,10 @@ const Header = (props) => {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex', mb: '5rem' }}>
+    <Box sx={{ display: 'flex', mb: 8 }}>
       <CssBaseline />
       <AppBar component="nav">
-        <Toolbar className="bg-red-600 ">
+        <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -86,8 +85,12 @@ const Header = (props) => {
                 {item}
               </Button>
             ))}
-            <Button disableRipple sx={{ color: '#fff' }} onClick={handleLogout}>
-              logout
+            <Button
+              disableRipple
+              sx={{ color: '#ffff' }}
+              onClick={handleLogout}
+            >
+              Logout
             </Button>
           </Box>
         </Toolbar>

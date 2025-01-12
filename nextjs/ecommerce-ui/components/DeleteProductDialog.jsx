@@ -1,5 +1,6 @@
 import $axios from '@/lib/axios/axios.instance';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { CircularProgress } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,9 +9,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import Loader from './Loader';
 
-const DeleteProductDialog = (props) => {
+const DeleteProductDialogue = (props) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -21,8 +21,8 @@ const DeleteProductDialog = (props) => {
     setOpen(false);
   };
 
+  // Delete Product API
   const queryClient = useQueryClient();
-
   const { isPending, mutate } = useMutation({
     mutationKey: ['delete-product'],
     mutationFn: async () => {
@@ -35,9 +35,8 @@ const DeleteProductDialog = (props) => {
       console.log(error);
     },
   });
-
   if (isPending) {
-    return <Loader isPending />;
+    return <CircularProgress />;
   }
   return (
     <React.Fragment>
@@ -56,12 +55,11 @@ const DeleteProductDialog = (props) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Are you sure you want to delete this product?
+          {'Do you want to delete this product?'}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Deleting this product is a permanent action and cannot be undone.
-            Please confirm if you wish to proceed.
+            Once the product is deleted, this action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -74,8 +72,8 @@ const DeleteProductDialog = (props) => {
               handleClose();
             }}
             autoFocus
-            color="error"
             variant="contained"
+            color="error"
           >
             Yes
           </Button>
@@ -84,5 +82,4 @@ const DeleteProductDialog = (props) => {
     </React.Fragment>
   );
 };
-
-export default DeleteProductDialog;
+export default DeleteProductDialogue;

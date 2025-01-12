@@ -22,15 +22,17 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
 import { genders, roles } from '@/constants/general.constant';
 import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import $axios from '@/lib/axios/axios.instance';
 
 const Register = () => {
   const router = useRouter();
-
   // password
   const [showPassword, setShowPassword] = useState(false);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -48,7 +50,6 @@ const Register = () => {
       router.push('/login');
     },
   });
-
   return (
     <Box>
       {isPending && <LinearProgress color="secondary" />}
@@ -106,8 +107,8 @@ const Register = () => {
 
               <OutlinedInput
                 {...formik.getFieldProps('password')}
-                type={showPassword ? 'text' : 'password'}
-                // type="text"
+                // type={showPassword ? 'text' : 'password'}
+                type="text"
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -132,7 +133,6 @@ const Register = () => {
                 <FormHelperText error>{formik.errors.password}</FormHelperText>
               ) : null}
             </FormControl>
-
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
               <Select

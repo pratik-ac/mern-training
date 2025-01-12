@@ -1,10 +1,11 @@
 'use client';
-import { productCategories } from '@/constants/categories';
+import { productCategories } from '@/constants/general.constant';
 import $axios from '@/lib/axios/axios.instance';
-import { addProductValidationSchema } from '@/validation-schema/add.product.validation.schema';
+import { addProductValidationSchema } from '@/validation-schema/product.validation.schema';
 import {
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -14,51 +15,62 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Formik } from 'formik';
+import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-
 import React from 'react';
-const AddProduct = () => {
-  const router = useRouter();
 
-  const { isPending, error, data, mutate } = useMutation({
-    mutationKey: ['add-product'],
-    mutationFn: async (values) => {
-      return await $axios.post('/product/add', values, {
-        headers: {
-          Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-        },
-      });
+const EditProductPage = () => {
+  const router = useRouter();
+  const params = useParams();
+  const productId = params?.id;
+  const { data, isPending } = useQuery({
+    queryKey: ['get-product-details'],
+    queryFn: async () => {
+      return await $axios.get(`/product/details/${productId}`);
     },
-    onSuccess: (res) => {
-      router.push('/');
+  });
+  // get product details
+  const { isPending: editPending, mutate } = useMutation({
+    mutationKey: ['edit-product'],
+    mutationFn: async (values) => {
+      return await $axios.put(`/product/edit/${productId}`, values);
+    },
+    onSuccess: () => {
+      router.push(`/product/details/${productId}`);
     },
     onError: (error) => {
       console.log(error);
     },
   });
+  const productDetail = data?.data?.productDetail;
+  console.log(productDetail);
+  if (isPending) {
+    <CircularProgress />;
+  }
+
   return (
     <Formik
+      enableReinitialize
       initialValues={{
-        name: '',
-        brand: '',
-        price: '',
-        quantity: '',
-        category: '',
-        freeShipping: '',
-        description: '',
+        name: productDetail?.name || '',
+        brand: productDetail?.brand || '',
+        price: productDetail?.price || '',
+        quantity: productDetail?.quantity || '',
+        category: productDetail?.category || '',
+        freeShipping: productDetail?.freeShipping || false,
+        description: productDetail?.description || '',
       }}
       validationSchema={addProductValidationSchema}
       onSubmit={(values) => {
         mutate(values);
-        router.push('/');
       }}
     >
       {(formik) => (
         <form onSubmit={formik.handleSubmit} className="auth-form gap-4">
           <Typography variant="h3" fontFamily="times new roman">
-            Add Product
+            Edit Product
           </Typography>
           <FormControl fullWidth>
             <TextField label="Name" {...formik.getFieldProps('name')} />
@@ -112,8 +124,8 @@ const AddProduct = () => {
               })}
             </Select>
 
-            {formik.touched.role && formik.errors.role ? (
-              <FormHelperText error>{formik.errors.role}</FormHelperText>
+            {formik.touched.category && formik.errors.category ? (
+              <FormHelperText error>{formik.errors.category}</FormHelperText>
             ) : null}
           </FormControl>
           <FormControl fullWidth>
@@ -129,7 +141,12 @@ const AddProduct = () => {
           </FormControl>
           <FormControl fullWidth>
             <FormControlLabel
-              control={<Checkbox {...formik.getFieldProps('freeShipping')} />}
+              control={
+                <Checkbox
+                  checked={formik?.values?.freeShipping}
+                  {...formik.getFieldProps('freeShipping')}
+                />
+              }
               label="FreeShipping"
               labelPlacement="start"
             />
@@ -142,6 +159,9 @@ const AddProduct = () => {
               variant="contained"
               color="secondary"
               disabled={isPending}
+              onClick={() => {
+                router.push('/');
+              }}
             >
               Submit
             </Button>
@@ -152,4 +172,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProductPage;
