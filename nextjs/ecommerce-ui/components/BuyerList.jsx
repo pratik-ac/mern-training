@@ -3,9 +3,10 @@ import $axios from '@/lib/axios/axios.instance';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
-import { CircularProgress, Pagination } from '@mui/material';
+import { Pagination } from '@mui/material';
 import ProductCard from './ProductCard';
 import { isBuyer } from '@/utils/check.role';
+import Loader from './Loader';
 
 const BuyerList = () => {
   const [page, setPage] = useState(1);
@@ -27,7 +28,7 @@ const BuyerList = () => {
   const productList = data?.data?.productList || [];
 
   if (isPending) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   if (error) {

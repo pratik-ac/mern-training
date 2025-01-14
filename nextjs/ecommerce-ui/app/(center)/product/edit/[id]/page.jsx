@@ -1,11 +1,11 @@
 'use client';
+import Loader from '@/components/Loader';
 import { productCategories } from '@/constants/general.constant';
 import $axios from '@/lib/axios/axios.instance';
 import { addProductValidationSchema } from '@/validation-schema/product.validation.schema';
 import {
   Button,
   Checkbox,
-  CircularProgress,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -47,7 +47,7 @@ const EditProductPage = () => {
   const productDetail = data?.data?.productDetail;
   console.log(productDetail);
   if (isPending) {
-    <CircularProgress />;
+    <Loader />;
   }
 
   return (

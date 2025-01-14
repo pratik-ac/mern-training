@@ -1,13 +1,11 @@
 'use client';
 import BuyerList from '@/components/BuyerList';
 import SellerList from '@/components/SellerList';
-import { isSeller } from '@/utils/check.role';
 import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const Home = () => {
-  const router = useRouter();
   const [userRole, setUserRole] = useState(null);
   const [firstName, setFirstName] = useState('');
 
@@ -15,23 +13,19 @@ const Home = () => {
     setUserRole(window.localStorage.getItem('userRole'));
     setFirstName(window.localStorage.getItem('firstName'));
   }, []);
-
+  const router = useRouter();
   return (
     <div>
       <p className="text-5xl bold underline">Welcome {firstName}</p>
-
-      {isSeller() && (
-        <Button
-          variant="contained"
-          color="secondary"
-          size="large"
-          onClick={() => {
-            router.push('/add-product');
-          }}
-        >
-          add product
-        </Button>
-      )}
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          router.push('/add-product');
+        }}
+      >
+        Add Product
+      </Button>
 
       {userRole === 'buyer' ? <BuyerList /> : <SellerList />}
     </div>

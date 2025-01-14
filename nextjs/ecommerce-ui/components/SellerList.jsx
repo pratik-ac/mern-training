@@ -1,10 +1,11 @@
 'use client';
 import $axios from '@/lib/axios/axios.instance';
-import { CircularProgress, Pagination } from '@mui/material';
+import { Pagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import ProductCard from './ProductCard';
 import { useEffect, useState } from 'react';
 import { isSeller } from '@/utils/check.role';
+import Loader from './Loader';
 
 const SellerList = () => {
   const [role, setRole] = useState('');
@@ -28,7 +29,7 @@ const SellerList = () => {
   console.log(productList);
 
   if (isPending) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   return (

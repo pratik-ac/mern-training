@@ -10,7 +10,6 @@ import {
   Typography,
   Chip,
   Checkbox,
-  CircularProgress,
 } from '@mui/material';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -19,6 +18,7 @@ import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import DeleteProductDialog from './DeleteProductDialog';
 import { useRouter } from 'next/navigation';
+import Loader from './Loader';
 
 const ProductDetails = () => {
   const router = useRouter();
@@ -75,7 +75,7 @@ const ProductDetails = () => {
   const isCountEqualToProductQuantity = count === availableProductQuantity;
 
   if (isPending || !isMounted || addToCartPending) {
-    return <CircularProgress />;
+    return <Loader />;
   }
   return (
     <div className="flex flex-col md:flex-row max-w-[90%] mx-auto shadow-2xl rounded-lg overflow-hidden bg-white">
