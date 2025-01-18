@@ -1,4 +1,4 @@
-import Yup from "yup";
+import Yup from 'yup';
 
 export const addCartItemValidationSchema = Yup.object({
   productId: Yup.string().required().trim(),
