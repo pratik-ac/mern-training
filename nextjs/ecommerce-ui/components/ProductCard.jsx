@@ -1,49 +1,36 @@
 'use client';
-import { isSeller } from '@/utils/check.role';
+import { currency } from '@/constants/general.constant';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { Box, Button, Chip, Stack, Typography } from '@mui/material';
+import { Button, Chip, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import DeleteProductDialog from './DeleteProductDialog';
 
 const ProductCard = (props) => {
   const router = useRouter();
   const productId = props._id;
   return (
-    <Box
-      sx={{
-        width: '400px',
-
-        boxShadow:
-          ' rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
-      }}
-    >
+    <div className="w-[400px] shadow-2xl">
+      {/* TODO: manage overflow */}
       <Image
         src={props.image || '/book.jpeg'}
         height={400}
         width={400}
-        alt="Iphone 14 pro image"
+        alt="Book image"
       />
-      <Box
-        sx={{
-          padding: '1rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}
-      >
+      <div className="flex flex-col gap-8 p-4">
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="h5">{props.name}</Typography>
           <Chip label={props.brand} color="success" variant="outlined" />
-          <Typography variant="h5">{props.price}</Typography>
+          <Typography variant="h5">
+            {currency}
+            {props.price}
+          </Typography>
         </Stack>
 
-        <Typography sx={{ textAlign: 'justify' }}>
-          {props.description}
+        <Typography sx={{ textAlign: 'justify', overflow: 'hidden' }}>
+          {props.description}...
         </Typography>
         <Stack direction="row" justifyContent="space-between">
-          {isSeller() && <DeleteProductDialog productId={productId} />}
-
           <Button
             fullWidth
             color="success"
@@ -56,8 +43,8 @@ const ProductCard = (props) => {
             View More
           </Button>
         </Stack>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

@@ -123,7 +123,6 @@ router.post(
   async (req, res) => {
     const { page, limit } = req.body;
     const skip = (page - 1) * limit;
-
     const data = await Cart.aggregate([
       {
         $match: {
@@ -138,28 +137,74 @@ router.post(
           as: 'productData',
         },
       },
+
       {
-        $project: {
-          productId: 1,
-          orderedQuantity: 1,
-          productDetails: {
-            name: { $first: ['$productData.name'] },
-            brand: { $first: '$productData.brand' },
-            category: { $first: '$productData.category' },
-            totalQuantity: { $first: '$productData.quantity' },
-            image: { $first: '$productData.image' },
-            freeShipping: { $first: '$productData.freeShipping' },
-            price: { $first: '$productData.price' },
-          },
+        $facet: {
+          calculateAmount: [
+            {
+              $project: {
+                productId: 1,
+                itemTotal: {
+                  $multiply: [
+                    '$orderedQuantity',
+                    { $first: '$productData.price' },
+                  ],
+                },
+                orderedQuantity: 1,
+                price: { $first: '$productData.price' },
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                subTotal: { $sum: '$itemTotal' },
+              },
+            },
+          ],
+          itemsInCart: [
+            {
+              $project: {
+                productId: 1,
+                orderedQuantity: 1,
+                productDetails: {
+                  name: { $first: ['$productData.name'] },
+                  brand: { $first: '$productData.brand' },
+                  category: { $first: '$productData.category' },
+                  totalQuantity: { $first: '$productData.quantity' },
+                  image: { $first: '$productData.image' },
+                  freeShipping: { $first: '$productData.freeShipping' },
+                  price: { $first: '$productData.price' },
+                },
+              },
+            },
+          ],
         },
       },
-      // { $skip: skip },
-      // { $limit: limit },
     ]);
 
-    return res.status(200).send({ message: 'success', cartData: data });
+    const cartItems = data[0]?.itemsInCart;
+    const subTotal = data[0]?.calculateAmount[0]?.subTotal;
+    // ? one way of doing it
+    // const subTotal = data.reduce((accumulator, item) => {
+    //   return (accumulator += item.productDetails.price * item.orderedQuantity);
+    // }, 0);
+
+    // console.log(subTotal);
+
+    return res
+      .status(200)
+      .send({ message: 'success', cartData: cartItems, subTotal });
   }
 );
+
+// * get cart item count
+router.get('/cart/item/count', isBuyer, async (req, res) => {
+  const cartItemCount = await Cart.find({
+    buyerId: req.loggedInUserId,
+  }).countDocuments();
+
+  return res.status(200).send({ itemCount: cartItemCount });
+});
 
 export default router;
 

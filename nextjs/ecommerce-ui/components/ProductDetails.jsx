@@ -12,25 +12,39 @@ import {
   Checkbox,
 } from '@mui/material';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DeleteProductDialog from './DeleteProductDialog';
 import { useRouter } from 'next/navigation';
 import Loader from './Loader';
+import { currency } from '@/constants/general.constant';
 
 const ProductDetails = () => {
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
   const [count, setCount] = React.useState(1);
-  const [isMounted, setIsMounted] = useState(true);
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
+  const queryClient = useQueryClient();
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    if (typeof window !== undefined) {
       setIsMounted(true);
     }
   }, []);
+
+  // hit get product detail api
+  const { data, isPending } = useQuery({
+    queryKey: ['get-product-details'],
+    queryFn: async () => {
+      return await $axios.get(`/product/details/${params.id}`);
+    },
+  });
+
+  const productDetail = data?.data?.productDetail;
+  const availableProductQuantity = productDetail?.quantity;
+
+  const isCountEqualToProductQuantity = count === availableProductQuantity;
 
   const increaseCount = () => {
     if (count < availableProductQuantity) {
@@ -44,7 +58,7 @@ const ProductDetails = () => {
     }
   };
 
-  // add product to card
+  // add product to cart
   const { isPending: addToCartPending, mutate } = useMutation({
     mutationKey: ['add-item-to-cart'],
     mutationFn: async () => {
@@ -53,26 +67,16 @@ const ProductDetails = () => {
         orderedQuantity: count,
       });
     },
-    onSuccess: () => {
-      //open snackbar
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(['cart-item-count']);
+      // open snackbar
     },
-    onError: () => {
-      console.log('add to cart failed');
+
+    onError: (error) => {
+      console.log('add to cart failed...');
       console.log(error);
     },
   });
-
-  // hit get product detail api
-  const { data, isPending } = useQuery({
-    queryKey: ['get-product-details'],
-    queryFn: async () => {
-      return await $axios.get(`/product/details/${params.id}`);
-    },
-  });
-
-  const productDetail = data?.data?.productDetail;
-  const availableProductQuantity = productDetail?.quantity;
-  const isCountEqualToProductQuantity = count === availableProductQuantity;
 
   if (isPending || !isMounted || addToCartPending) {
     return <Loader />;
@@ -102,26 +106,29 @@ const ProductDetails = () => {
           color="secondary"
           className="text-sm md:text-base"
         />
-        <Typography variant="h6" className="text-gray-600 text-base md:text-lg">
+        <Typography
+          variant="h6"
+          className="text-gray-600 text-base md:text-lg capitalize"
+        >
           {productDetail?.category}
         </Typography>
         <Typography
           variant="h6"
           className="font-bold text-green-500 text-lg md:text-xl"
         >
-          ${productDetail?.price}
+          Price: {currency} {productDetail?.price}
         </Typography>
         <Stack
           direction="row"
           justifyContent="center"
           alignItems="center"
-          gap={1}
+          gap={2}
         >
           <Typography
             variant="h6"
             className="text-gray-500 text-sm md:text-base"
           >
-            Free shipping{productDetail?.freeShipping}
+            Free Shipping
           </Typography>
           <Checkbox color="success" checked={productDetail?.freeShipping} />
         </Stack>
@@ -136,6 +143,7 @@ const ProductDetails = () => {
           {productDetail?.description}
         </Typography>
         {/* Quantity Selector */}
+
         {isBuyer() && (
           <>
             <Stack
@@ -172,7 +180,6 @@ const ProductDetails = () => {
             <Button
               variant="contained"
               color="success"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg mt-4"
               onClick={() => {
                 mutate();
               }}
@@ -185,6 +192,7 @@ const ProductDetails = () => {
         {isSeller() && (
           <div className="flex gap-8 my-4">
             <DeleteProductDialog productId={params.id} />
+
             <Button
               variant="contained"
               color="success"
@@ -193,7 +201,7 @@ const ProductDetails = () => {
                 router.push(`/product/edit/${params.id}`);
               }}
             >
-              Edit
+              edit
             </Button>
           </div>
         )}
