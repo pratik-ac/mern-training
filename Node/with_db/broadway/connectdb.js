@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      "example-mongodb-url", // Replace with your MongoDB URI
+      "example-mongodb-uri", // Replace with your MongoDB URI
     );
     console.log("DB connection established...");
   } catch (error) {
